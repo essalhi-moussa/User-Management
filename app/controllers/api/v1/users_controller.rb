@@ -11,13 +11,13 @@ class Api::V1::UsersController < ApplicationController
     end
 
     #post
-    def addUsers
+    def addUser
         user = User.new(username: params[:username], password_digest: params[:password], email: params[:email])
         if user.save()
             render json: user, status: :ok
         else
             # render json: {message: "User not added", status: :unprocessable_entity}
-            render json: {message: "User not added"}, status: :unprocessable_entity
+            render json: {message: "User not added", error: user.errors}, status: :unprocessable_entity
             
         end
         
@@ -42,7 +42,7 @@ class Api::V1::UsersController < ApplicationController
                 render json: {message: "Update Failed"}, status: :unprocessable_entity
             end
         else
-            render json: {message: "User not Found"}, status: :unprocessable_entity
+            render json: {message: "User not Found", error: @user.errors}, status: :unprocessable_entity
         end
     end
 
@@ -61,7 +61,7 @@ class Api::V1::UsersController < ApplicationController
 
     private
         def userparams
-            params.permit(:username, :password_digest, :email);
+            params.permit(:username, :password, :email);
             
         end
 
