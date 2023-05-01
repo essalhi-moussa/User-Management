@@ -12,7 +12,7 @@ class Api::V1::UsersController < ApplicationController
 
     #post
     def addUser
-        user = User.new(username: params[:username], password_digest: params[:password], email: params[:email])
+        user = User.new(username: params[:username], password_digest: BCrypt::Password.create(params[:password]) , email: params[:email])
         if user.save()
             render json: user, status: :ok
         else
