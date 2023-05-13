@@ -1,5 +1,9 @@
 class Api::V1::UsersController < ApplicationController
     before_action :getUser, only: [:deleteUser, :updateUser, :show]
+    before_action  only: [:updateUser, :deleteUser] do
+        check_token
+    end
+
     #get
     def getUsers
         user = User.all
@@ -12,8 +16,9 @@ class Api::V1::UsersController < ApplicationController
 
     #post
     def addUser
-        user = User.new(username: params[:username], password_digest: BCrypt::Password.create(params[:password]) , email: params[:email])
-        if user.save()
+        user = User.new(:username=> params[:username], :password_digest=> (params[:password]) , :email=> params[:email])
+        user.type = 2 #evrytime a user is created a type is will be default 2
+        if user.save
             render json: user, status: :ok
         else
             # render json: {message: "User not added", status: :unprocessable_entity}
@@ -59,6 +64,9 @@ class Api::V1::UsersController < ApplicationController
         end
     end
 
+    def remove
+        User.all.destroy
+    end
     private
         def userparams
             params.permit(:username, :password, :email);
