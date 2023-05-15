@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       get 'show_user', action: :show, controller: :users
       put 'update_user', action: :updateUser, controller: :users
       delete 'delet_user', action: :deleteUser, controller: :users
+      delete 'remove', action: :remove, controller: :users
     end
   end
 end
